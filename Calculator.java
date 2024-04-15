@@ -7,14 +7,15 @@ public class Calculator implements ActionListener{
     JFrame frame;
     JTextField textField;
     JButton[] numbers = new JButton[10];
-    JButton[] functions = new JButton[8];
+    JButton[] functions = new JButton[9];
     JButton addition,subtraction,multiplication,division;
-    JButton decimal,delete,clear,equal;
+    JButton decimal,delete,clear,equal,negative;
     JPanel panel;
 
     Font defaultFont = new Font("Helvetica",Font.BOLD,25);
     double num1 = 0;
     double num2 = 0;
+    double result = 0;
     char operator;
 
     Calculator() {
@@ -37,8 +38,9 @@ public class Calculator implements ActionListener{
         division = new JButton("/");
         decimal = new JButton(".");
         equal = new JButton("=");
-        clear = new JButton("Clear");
-        delete = new JButton("Delete");
+        clear = new JButton("Clr");
+        delete = new JButton("Del");
+        negative = new JButton("(-)");
 
         functions[0] = addition;
         functions[1] = subtraction;
@@ -48,8 +50,9 @@ public class Calculator implements ActionListener{
         functions[5] = equal;
         functions[6] = clear;
         functions[7] = delete;
+        functions[8] = negative;
 
-        for(int i = 0;i<8;i++) {
+        for(int i = 0;i<9;i++) {
             functions[i].addActionListener(this);
             functions[i].setFont(defaultFont);
             functions[i].setFocusable(false);
@@ -72,8 +75,9 @@ public class Calculator implements ActionListener{
             numbers[i].setOpaque(false);
         }
 
-        delete.setBounds(50,430,145,50);
-        clear.setBounds(205,430,145,50);
+        negative.setBounds(50,430,100,50);
+        delete.setBounds(100,430,100,50);
+        clear.setBounds(150,430,100,50);
 
         panel = new JPanel();
         panel.setBounds(50,110,320,320);
@@ -101,6 +105,7 @@ public class Calculator implements ActionListener{
 
         frame.add(panel);
         frame.add(clear);
+        frame.add(negative);
         frame.add(delete);
         frame.add(textField);
         frame.setVisible(true);
@@ -112,6 +117,67 @@ public class Calculator implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        for(int i = 0;i<10;i++) {
+            if(e.getSource() == numbers[i]) {
+                textField.setText(textField.getText().concat(String.valueOf(i)));
+            }
+        }
+        if(e.getSource() == decimal) {
+            textField.setText(textField.getText().concat("."));
+        }
+        if(e.getSource() == addition) {
+            num1 = Double.parseDouble(textField.getText());
+            operator = '+';
+            textField.setText("");
+        }
+        if(e.getSource() == subtraction) {
+            num1 = Double.parseDouble(textField.getText());
+            operator = '-';
+            textField.setText("");
+        }
+        if(e.getSource() == multiplication) {
+            num1 = Double.parseDouble(textField.getText());
+            operator = '*';
+            textField.setText("");
+        }
+        if(e.getSource() == division) {
+            num1 = Double.parseDouble(textField.getText());
+            operator = '/';
+            textField.setText("");
+        }
+        if(e.getSource() == equal) {
+            num2 = Double.parseDouble(textField.getText());
+            switch(operator) {
+                case '+':
+                    result = num1 + num2;
+                break;
+                case '-':
+                    result = num1 - num2;
+                    break;
+                case '*':
+                    result = num1 * num2;
+                    break;
+                case '/':
+                    result = num1 / num2;
+                    break;
+            }
+            textField.setText(String.valueOf(result));
+            num1 = result;
+        }
+        if(e.getSource() == clear) {
+            textField.setText("");
+        }
+        if(e.getSource() == delete) {
+            String string = textField.getText();
+            textField.setText("");
+            for (int i = 0; i<string.length()-1;i++) {
+                textField.setText(textField.getText()+string.charAt(i));
+            }
+        }
+        if(e.getSource()==negative) {
+            double temp = Double.parseDouble(textField.getText());
+            temp *= -1;
+            textField.setText(String.valueOf(temp));
+        }
     }
 }
